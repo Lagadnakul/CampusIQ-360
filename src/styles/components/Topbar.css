@@ -1,0 +1,212 @@
+/* =========================
+   TOPBAR
+========================= */
+
+.topbar {
+  height: 76px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  padding: 0 32px;
+
+  background: rgba(8, 13, 26, 0.85);
+
+  border-bottom: 1px solid rgba(148, 163, 184, 0.10);
+
+  box-sizing: border-box;
+
+  position: sticky;
+  top: 0;
+  z-index: 50;
+
+  backdrop-filter: blur(14px);
+}
+
+
+/* =========================
+   SEARCH
+========================= */
+
+.search-box {
+  width: 380px;
+  height: 44px;
+
+  display: flex;
+  align-items: center;
+
+  gap: 10px;
+
+  padding: 0 12px;
+
+  background: rgba(18, 25, 42, 0.75);
+
+  border: 1px solid rgba(148, 163, 184, 0.14);
+
+  border-radius: 12px;
+
+  color: #64748b;
+
+  box-sizing: border-box;
+
+  transition: 0.2s ease;
+}
+
+.search-box:focus-within {
+  border-color: rgba(124, 92, 255, 0.45);
+
+  box-shadow:
+    0 0 0 3px rgba(124, 92, 255, 0.08);
+}
+
+.search-box input {
+  flex: 1;
+
+  min-width: 0;
+
+  border: none;
+
+  outline: none;
+
+  background: transparent;
+
+  color: #e2e8f0;
+
+  font-size: 14px;
+}
+
+.search-box input::placeholder {
+  color: #64748b;
+}
+
+
+/* =========================
+   KEYBOARD SHORTCUT
+========================= */
+
+.shortcut {
+  padding: 4px 7px;
+
+  border: 1px solid rgba(148, 163, 184, 0.16);
+
+  border-radius: 6px;
+
+  color: #64748b;
+
+  font-size: 11px;
+
+  white-space: nowrap;
+}
+
+
+/* =========================
+   RIGHT SIDE
+========================= */
+
+.navbar-right {
+  display: flex;
+  align-items: center;
+
+  gap: 28px;
+}
+
+
+/* =========================
+   NOTIFICATION
+========================= */
+
+.notification {
+  position: relative;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 38px;
+  height: 38px;
+
+  color: #94a3b8;
+
+  cursor: pointer;
+
+  border-radius: 10px;
+
+  transition: 0.2s ease;
+}
+
+.notification:hover {
+  background: rgba(255, 255, 255, 0.04);
+
+  color: #e2e8f0;
+}
+
+.notification-dot {
+  position: absolute;
+
+  top: 6px;
+  right: 6px;
+
+  width: 7px;
+  height: 7px;
+
+  border-radius: 50%;
+
+  background: #ef4444;
+
+  border: 2px solid #080d1a;
+}
+
+
+/* =========================
+   CAMPUS STATUS
+========================= */
+
+.campus-status {
+  display: flex;
+  align-items: center;
+
+  gap: 9px;
+
+  color: #94a3b8;
+
+  font-size: 13px;
+
+  white-space: nowrap;
+}
+
+.status-dot {
+  width: 8px;
+  height: 8px;
+
+  border-radius: 50%;
+
+  background: #22c55e;
+
+  box-shadow:
+    0 0 10px rgba(34, 197, 94, 0.6);
+}
+
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media (max-width: 800px) {
+
+  .topbar {
+    padding: 0 18px;
+  }
+
+  .search-box {
+    width: 280px;
+  }
+
+  .navbar-right {
+    gap: 12px;
+  }
+
+  .campus-status {
+    display: none;
+  }
+}

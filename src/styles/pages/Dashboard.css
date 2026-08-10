@@ -1,0 +1,128 @@
+/* =========================
+   DASHBOARD HEADER
+========================= */
+
+.dashboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 32px;
+}
+
+.eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #8b7cff;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  margin-bottom: 12px;
+}
+
+.dashboard-header h1 {
+  margin: 0;
+  font-size: 36px;
+  line-height: 1.2;
+  font-weight: 700;
+  color: #f8fafc;
+}
+
+.dashboard-header p {
+  margin: 10px 0 0;
+  color: #64748b;
+  font-size: 15px;
+}
+
+
+/* =========================
+   DATE CARD
+========================= */
+
+.date-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  padding: 16px 20px;
+
+  background: rgba(20, 27, 45, 0.75);
+  border: 1px solid rgba(148, 163, 184, 0.12);
+  border-radius: 16px;
+
+  color: #94a3b8;
+}
+
+.date-card svg {
+  color: #94a3b8;
+}
+
+.date-card small {
+  display: block;
+  font-size: 11px;
+  color: #64748b;
+  margin-bottom: 4px;
+}
+
+.date-card strong {
+  display: block;
+  font-size: 13px;
+  color: #e2e8f0;
+}
+
+
+/* =========================
+   STATISTICS
+========================= */
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 18px;
+  margin-bottom: 20px;
+}
+
+
+/* =========================
+   INTELLIGENCE SECTION
+========================= */
+
+.intelligence-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.6fr) minmax(320px, 1fr);
+  gap: 18px;
+}
+
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media (max-width: 1100px) {
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .intelligence-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 700px) {
+  .dashboard-header {
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .dashboard-header h1 {
+    font-size: 28px;
+  }
+
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .date-card {
+    width: 100%;
+  }
+}

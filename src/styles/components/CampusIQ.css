@@ -1,0 +1,182 @@
+/* =========================================
+   CAMPUS IQ
+========================================= */
+
+.campus-iq-card {
+  width: 100%;
+  min-height: 100%;
+  padding: 28px;
+  border-radius: 18px;
+  background: #0d1220;
+  border: 1px solid #20283a;
+  box-sizing: border-box;
+}
+
+
+/* =========================================
+   HEADER
+========================================= */
+
+.campus-iq-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 28px;
+}
+
+.campus-iq-icon {
+  width: 46px;
+  height: 46px;
+  border-radius: 14px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  color: #9b8cff;
+  background: #171d3b;
+  border: 1px solid #292f5b;
+}
+
+.campus-iq-header h2 {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 700;
+  color: #f8fafc;
+}
+
+.campus-iq-header p {
+  margin: 5px 0 0;
+  font-size: 14px;
+  color: #71809d;
+}
+
+
+/* =========================================
+   GREETING
+========================================= */
+
+.campus-iq-greeting {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+
+  margin-bottom: 22px;
+}
+
+.greeting-icon {
+  color: #9b8cff;
+  margin-top: 3px;
+}
+
+.campus-iq-greeting p {
+  margin: 0;
+
+  font-size: 15px;
+  line-height: 1.6;
+  color: #c5cee0;
+}
+
+
+/* =========================================
+   QUICK ACTIONS
+========================================= */
+
+.campus-iq-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+
+  margin-bottom: 18px;
+}
+
+.campus-iq-actions button {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+
+  padding: 9px 12px;
+
+  border: 1px solid #293249;
+  border-radius: 9px;
+
+  background: #121827;
+  color: #9ca9c2;
+
+  font-size: 12px;
+  font-weight: 500;
+
+  cursor: pointer;
+
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease;
+}
+
+.campus-iq-actions button:hover {
+  background: #191f36;
+  border-color: #4c57a5;
+  color: #e7eaff;
+}
+
+
+/* =========================================
+   INPUT
+========================================= */
+
+.campus-iq-input {
+  display: flex;
+  align-items: center;
+
+  width: 100%;
+
+  border: 1px solid #293249;
+  border-radius: 10px;
+
+  background: #0a0f1b;
+
+  overflow: hidden;
+}
+
+.campus-iq-input input {
+  flex: 1;
+
+  min-width: 0;
+
+  padding: 12px 14px;
+
+  border: none;
+  outline: none;
+
+  background: transparent;
+  color: #f8fafc;
+
+  font-size: 14px;
+}
+
+.campus-iq-input input::placeholder {
+  color: #59657d;
+}
+
+.campus-iq-input button {
+  width: 42px;
+  height: 42px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border: none;
+
+  background: #171d3b;
+  color: #8f85ff;
+
+  cursor: pointer;
+
+  transition: background 0.2s ease;
+}
+
+.campus-iq-input button:hover {
+  background: #252b55;
+}
