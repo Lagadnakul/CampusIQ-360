@@ -6,14 +6,20 @@ import {
 
 import Dashboard from "../pages/Dashboard";
 import DashboardLayout from "../layouts/DashboardLayout";
+
 import CampusVision from "../pages/CampusVision";
+import CampusPulse from "../pages/CampusPulse";
+import CameraMonitoring from "../pages/CameraMonitoring";
+
 import Attendance from "../pages/Attendance";
 import Timetable from "../pages/Timetable";
 import Library from "../pages/Library";
 import Events from "../pages/Events";
 import Placements from "../pages/Placements";
 import Profile from "../pages/Profile";
-import  Settings  from "../pages/Settings";
+import Settings from "../pages/Settings";
+import Academics from "../pages/Academics";
+
 function AppRoutes() {
   return (
     <BrowserRouter>
@@ -21,6 +27,10 @@ function AppRoutes() {
       <DashboardLayout>
 
         <Routes>
+
+          {/* =========================
+              DASHBOARD
+          ========================= */}
 
           <Route
             path="/"
@@ -31,6 +41,11 @@ function AppRoutes() {
             path="/dashboard"
             element={<Dashboard />}
           />
+
+
+          {/* =========================
+              CAMPUS
+          ========================= */}
 
           <Route
             path="/campus-vision"
@@ -46,29 +61,58 @@ function AppRoutes() {
             path="/timetable"
             element={<Timetable />}
           />
-              
-          <Route 
-          path= "/Library"
-          element={<Library/>}
+
+          <Route
+            path="/library"
+            element={<Library />}
           />
 
           <Route
-          path= "/Events"
-          element={<Events/>}
-          />
-            <Route
-          path= "/placements"
-          element={<Placements/>}
+            path="/events"
+            element={<Events />}
           />
 
           <Route
-          path = "/profile"
-          element={<Profile/>}/>
-        
-        <Route
-        path= "/settings"
-        element={<Settings/>}/>
-         </Routes>
+            path="/placements"
+            element={<Placements />}
+          />
+
+          <Route
+            path="/academics"
+            element={<Academics />}
+          />
+
+
+          {/* =========================
+              INTELLIGENCE
+          ========================= */}
+
+          <Route
+            path="/campus-pulse"
+            element={<CampusPulse />}
+          />
+
+          <Route
+            path="/camera-monitoring"
+            element={<CameraMonitoring />}
+          />
+
+
+          {/* =========================
+              USER
+          ========================= */}
+
+          <Route
+            path="/profile"
+            element={<Profile />}
+          />
+
+          <Route
+            path="/settings"
+            element={<Settings />}
+          />
+
+        </Routes>
 
       </DashboardLayout>
 

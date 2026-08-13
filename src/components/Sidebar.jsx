@@ -1,32 +1,122 @@
 import {
-  BarChart3,
-  BookOpen,
-  CalendarDays,
-  Camera,
-  GraduationCap,
   LayoutDashboard,
+  CalendarDays,
+  GraduationCap,
+  BookOpen,
   Library,
-  Settings,
-  Sparkles,
-  Users,
   BriefcaseBusiness,
+  Users,
+  Camera,
+  Sparkles,
+  ShieldCheck,
+  ScanFace,
+  Activity,
 } from "lucide-react";
 
 import { NavLink } from "react-router-dom";
+
 import "../styles/components/Sidebar.css";
 
 function Sidebar() {
+  const campusItems = [
+    {
+      name: "Dashboard",
+      path: "/dashboard",
+      icon: LayoutDashboard,
+    },
+    {
+      name: "Timetable",
+      path: "/timetable",
+      icon: CalendarDays,
+    },
+    {
+      name: "Attendance",
+      path: "/attendance",
+      icon: GraduationCap,
+    },
+    {
+      name: "Academics",
+      path: "/academics",
+      icon: BookOpen,
+    },
+    {
+      name: "Library",
+      path: "/library",
+      icon: Library,
+    },
+    {
+      name: "Placements",
+      path: "/placements",
+      icon: BriefcaseBusiness,
+    },
+    {
+      name: "Events",
+      path: "/events",
+      icon: Users,
+    },
+    {
+      name: "Campus Vision",
+      path: "/campus-vision",
+      icon: Camera,
+    },
+  ];
+
+  const intelligenceItems = [
+    {
+      name: "CampusIQ",
+      path: "/campus-iq",
+      icon: Sparkles,
+    },
+    {
+      name: "Campus Pulse",
+      path: "/campus-pulse",
+      icon: Activity,
+    },
+    {
+      name: "Camera Monitoring",
+      path: "/camera-monitoring",
+      icon: ScanFace,
+    },
+    {
+      name: "Campus Rules",
+      path: "/campus-rules",
+      icon: ShieldCheck,
+    },
+  ];
+
+  const renderItems = (items) =>
+    items.map((item) => {
+      const Icon = item.icon;
+
+      return (
+        <NavLink
+          key={item.name}
+          to={item.path}
+          className={({ isActive }) =>
+            `sidebar-item ${isActive ? "active" : ""}`
+          }
+        >
+          <Icon
+            size={20}
+            strokeWidth={1.8}
+          />
+
+          <span>{item.name}</span>
+        </NavLink>
+      );
+    });
+
   return (
     <aside className="sidebar">
 
-      {/* =========================
+      {/* =================================
           BRAND
-      ========================= */}
+      ================================= */}
 
       <div className="sidebar-brand">
 
         <div className="brand-icon">
-          <GraduationCap size={22} />
+          <GraduationCap size={27} />
         </div>
 
         <div>
@@ -37,186 +127,58 @@ function Sidebar() {
       </div>
 
 
-      {/* =========================
-          MAIN NAVIGATION
-      ========================= */}
+      {/* =================================
+          SCROLLABLE NAVIGATION
+      ================================= */}
 
-      <div className="sidebar-section">
+      <div className="sidebar-scroll">
 
-        <p className="sidebar-label">
-          CAMPUS
-        </p>
+        {/* CAMPUS */}
 
-        <nav>
+        <section className="sidebar-section">
 
-          <NavLink
-            to="/dashboard"
-            className={({ isActive }) =>
-              `sidebar-item ${isActive ? "active" : ""}`
-            }
-          >
-            <LayoutDashboard size={18} />
-            <span>Dashboard</span>
-          </NavLink>
+          <p className="sidebar-label">
+            CAMPUS
+          </p>
+
+          <nav>
+            {renderItems(campusItems)}
+          </nav>
+
+        </section>
 
 
-          <NavLink
-            to="/timetable"
-            className={({ isActive }) =>
-              `sidebar-item ${isActive ? "active" : ""}`
-            }
-          >
-            <CalendarDays size={18} />
-            <span>Timetable</span>
-          </NavLink>
-                  
-               <NavLink
-  to="/attendance"
-  className={({ isActive }) =>
-    `sidebar-item ${isActive ? "active" : ""}`
-  }
->
-  <GraduationCap size={18} />
-  <span>Attendance</span>
-</NavLink>
+        {/* INTELLIGENCE */}
 
-          <NavLink
-            to="/academics"
-            className={({ isActive }) =>
-              `sidebar-item ${isActive ? "active" : ""}`
-            }
-          >
-            <BookOpen size={18} />
-            <span>Academics</span>
-          </NavLink>
+        <section className="sidebar-section">
 
+          <p className="sidebar-label">
+            INTELLIGENCE
+          </p>
 
-          <NavLink
-            to="/library"
-            className={({ isActive }) =>
-              `sidebar-item ${isActive ? "active" : ""}`
-            }
-          >
-            <Library size={18} />
-            <span>Library</span>
-          </NavLink>
+          <nav>
+            {renderItems(intelligenceItems)}
+          </nav>
 
-                    <NavLink
-  to="/placements"
-  className={({ isActive }) =>
-    `sidebar-item ${isActive ? "active" : ""}`
-  }
->
-  <BriefcaseBusiness size={18} />
-  <span>Placements</span>
-</NavLink> 
-          <NavLink
-            to="/events"
-            className={({ isActive }) =>
-              `sidebar-item ${isActive ? "active" : ""}`
-            }
-          >
-            <Users size={18} />
-            <span>Events</span>
-          </NavLink>
-
-
-          {/* Campus Vision */}
-
-          <NavLink
-            to="/campus-vision"
-            className={({ isActive }) =>
-              `sidebar-item ${isActive ? "active" : ""}`
-            }
-          >
-            <Camera size={18} />
-            <span>Campus Vision</span>
-          </NavLink>
-
-        </nav>
+        </section>
 
       </div>
 
 
-      {/* =========================
-          INTELLIGENCE
-      ========================= */}
-
-      <div className="sidebar-section">
-
-        <p className="sidebar-label">
-          INTELLIGENCE
-        </p>
-
-        <nav>
-
-          <NavLink
-            to="/campusiq"
-            className={({ isActive }) =>
-              `sidebar-item ${isActive ? "active" : ""}`
-            }
-          >
-            <Sparkles size={18} />
-            <span>CampusIQ</span>
-          </NavLink>
-
-
-          <NavLink
-            to="/campus-pulse"
-            className={({ isActive }) =>
-              `sidebar-item ${isActive ? "active" : ""}`
-            }
-          >
-            <BarChart3 size={18} />
-            <span>Campus Pulse</span>
-          </NavLink>
-
-        </nav>
-
-      </div>
-
-
-      {/* =========================
-          SYSTEM
-      ========================= */}
-
-      <div className="sidebar-section">
-
-        <p className="sidebar-label">
-          SYSTEM
-        </p>
-
-        <nav>
-
-          <NavLink
-            to="/settings"
-            className={({ isActive }) =>
-              `sidebar-item ${isActive ? "active" : ""}`
-            }
-          >
-            <Settings size={18} />
-            <span>Settings</span>
-          </NavLink>
-
-        </nav>
-
-      </div>
-
-
-      {/* =========================
-          STUDENT PROFILE
-      ========================= */}
+      {/* =================================
+          PROFILE
+      ================================= */}
 
       <div className="sidebar-profile">
 
         <div className="profile-avatar">
-          N
+          NL
         </div>
 
         <div className="profile-info">
 
           <strong>
-            Nakul
+            Nakul Lagad
           </strong>
 
           <small>

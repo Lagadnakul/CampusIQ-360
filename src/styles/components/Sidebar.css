@@ -4,22 +4,26 @@
 
 .sidebar {
   width: 290px;
-  min-height: 100vh;
+  height: 100vh;
 
   position: fixed;
   left: 0;
   top: 0;
-  bottom: 0;
 
   display: flex;
   flex-direction: column;
 
+  box-sizing: border-box;
+
   padding: 20px 14px;
 
   background: #080d1a;
+
   border-right: 1px solid rgba(255, 255, 255, 0.08);
 
   z-index: 100;
+
+  overflow: hidden;
 }
 
 
@@ -28,17 +32,24 @@
 ========================================= */
 
 .sidebar-brand {
+  flex-shrink: 0;
+
   display: flex;
   align-items: center;
+
   gap: 12px;
 
   padding: 0 8px;
-  margin-bottom: 45px;
+
+  margin-bottom: 32px;
 }
+
 
 .brand-icon {
   width: 52px;
   height: 52px;
+
+  flex-shrink: 0;
 
   display: flex;
   align-items: center;
@@ -58,6 +69,7 @@
     0 8px 25px rgba(91, 124, 255, 0.25);
 }
 
+
 .sidebar-brand h2 {
   margin: 0;
 
@@ -65,17 +77,66 @@
   font-weight: 700;
 
   color: #f8fafc;
+
+  line-height: 1.1;
 }
+
 
 .sidebar-brand span {
   display: block;
 
-  margin-top: 2px;
+  margin-top: 3px;
 
   font-size: 14px;
   font-weight: 700;
 
   color: #8b5cf6;
+}
+
+
+/* =========================================
+   SCROLL AREA
+========================================= */
+
+.sidebar-scroll {
+  flex: 1;
+
+  min-height: 0;
+
+  overflow-y: auto;
+  overflow-x: hidden;
+
+  padding-right: 3px;
+
+  scrollbar-width: thin;
+
+  scrollbar-color:
+    rgba(139, 92, 246, 0.45)
+    transparent;
+}
+
+
+/* Chrome / Edge / Safari */
+
+.sidebar-scroll::-webkit-scrollbar {
+  width: 5px;
+}
+
+
+.sidebar-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+
+.sidebar-scroll::-webkit-scrollbar-thumb {
+  background: rgba(139, 92, 246, 0.35);
+
+  border-radius: 10px;
+}
+
+
+.sidebar-scroll::-webkit-scrollbar-thumb:hover {
+  background: rgba(139, 92, 246, 0.65);
 }
 
 
@@ -87,10 +148,12 @@
   margin-bottom: 28px;
 }
 
+
 .sidebar-label {
   margin: 0 0 12px 12px;
 
   font-size: 12px;
+
   font-weight: 700;
 
   letter-spacing: 1.5px;
@@ -105,9 +168,12 @@
 
 .sidebar nav {
   display: flex;
+
   flex-direction: column;
+
   gap: 5px;
 }
+
 
 .sidebar-item {
   width: 100%;
@@ -127,19 +193,29 @@
   color: #94a3b8;
 
   font-size: 15px;
+
   font-weight: 500;
+
+  text-decoration: none;
 
   cursor: pointer;
 
   transition:
     background 0.2s ease,
     color 0.2s ease,
-    transform 0.2s ease;
+    transform 0.2s ease,
+    border 0.2s ease;
 }
+
 
 .sidebar-item svg {
   flex-shrink: 0;
+
+  transition:
+    color 0.2s ease,
+    transform 0.2s ease;
 }
+
 
 .sidebar-item:hover {
   color: #f8fafc;
@@ -150,6 +226,13 @@
 }
 
 
+.sidebar-item:hover svg {
+  color: #a78bfa;
+
+  transform: scale(1.05);
+}
+
+
 /* =========================================
    ACTIVE ITEM
 ========================================= */
@@ -157,11 +240,12 @@
 .sidebar-item.active {
   color: #ffffff;
 
-  background: linear-gradient(
-    135deg,
-    rgba(76, 102, 255, 0.25),
-    rgba(139, 92, 246, 0.18)
-  );
+  background:
+    linear-gradient(
+      135deg,
+      rgba(76, 102, 255, 0.25),
+      rgba(139, 92, 246, 0.18)
+    );
 
   border: 1px solid rgba(99, 102, 241, 0.22);
 
@@ -169,49 +253,68 @@
     0 8px 25px rgba(76, 102, 255, 0.08);
 }
 
+
 .sidebar-item.active svg {
-  color: #8b9cff;
+  color: #a78bfa;
 }
 
 
 /* =========================================
-   STUDENT PROFILE
+   PROFILE
 ========================================= */
 
 .sidebar-profile {
-  margin-top: auto;
+  flex-shrink: 0;
 
   display: flex;
   align-items: center;
 
   gap: 12px;
 
-  padding: 16px 8px 8px;
+  margin-top: 12px;
+
+  padding: 14px 8px 4px;
 
   border-top: 1px solid rgba(255, 255, 255, 0.08);
+
+  background: #080d1a;
 }
+
 
 .profile-avatar {
   width: 42px;
   height: 42px;
 
+  flex-shrink: 0;
+
   display: flex;
   align-items: center;
   justify-content: center;
 
-  border-radius: 50%;
+  border-radius: 13px;
 
-  background: linear-gradient(
-    135deg,
-    #4f6cff,
-    #8b5cf6
-  );
+  background:
+    linear-gradient(
+      135deg,
+      #5b7cff,
+      #8b5cf6
+    );
 
   color: white;
 
   font-weight: 700;
+
   font-size: 15px;
+
+  box-shadow:
+    0 6px 18px rgba(91, 124, 255, 0.2);
 }
+
+
+.profile-info {
+  min-width: 0;
+}
+
 
 .sidebar-profile strong {
   display: block;
@@ -219,7 +322,16 @@
   color: #f8fafc;
 
   font-size: 14px;
+
+  font-weight: 600;
+
+  white-space: nowrap;
+
+  overflow: hidden;
+
+  text-overflow: ellipsis;
 }
+
 
 .sidebar-profile small {
   display: block;
@@ -236,44 +348,77 @@
    RESPONSIVE
 ========================================= */
 
+@media (max-width: 1100px) {
+
+  .sidebar {
+    width: 250px;
+  }
+
+}
+
+
 @media (max-width: 900px) {
+
   .sidebar {
     width: 230px;
   }
+
 }
 
+
 @media (max-width: 700px) {
+
   .sidebar {
     width: 75px;
+
     padding: 20px 10px;
   }
 
+
   .sidebar-brand {
     justify-content: center;
+
+    padding: 0;
   }
+
 
   .sidebar-brand > div:last-child {
     display: none;
   }
 
+
   .sidebar-label {
     display: none;
   }
 
+
   .sidebar-item {
     justify-content: center;
+
     padding: 0;
   }
+
 
   .sidebar-item span {
     display: none;
   }
 
+
   .sidebar-profile {
     justify-content: center;
+
+    padding-left: 0;
+    padding-right: 0;
   }
 
-  .sidebar-profile > div:last-child {
+
+  .profile-info {
     display: none;
   }
+
+
+  .sidebar-scroll {
+    padding-right: 0;
+  }
+
 }
