@@ -1,0 +1,559 @@
+/* =========================================================
+   SETTINGS PAGE
+   CampusIQ 360 — Premium Dark UI
+========================================================= */
+
+.settings-page {
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 34px 42px 60px;
+  box-sizing: border-box;
+}
+
+/* =========================================================
+   HEADER
+========================================================= */
+
+.settings-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 30px;
+  margin-bottom: 32px;
+}
+
+.settings-eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+
+  color: #8b6cff;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 1.4px;
+}
+
+.settings-header h1 {
+  margin: 0;
+  color: #f5f7ff;
+  font-size: 34px;
+  font-weight: 750;
+  letter-spacing: -0.8px;
+}
+
+.settings-header p {
+  margin: 10px 0 0;
+  color: #8792ad;
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+/* =========================================================
+   SETTINGS LAYOUT
+========================================================= */
+
+.settings-layout {
+  display: grid;
+  grid-template-columns: 245px minmax(0, 1fr);
+  gap: 24px;
+  align-items: start;
+}
+
+/* =========================================================
+   SETTINGS NAVIGATION
+========================================================= */
+
+.settings-nav {
+  position: sticky;
+  top: 24px;
+
+  padding: 10px;
+  border: 1px solid #20283b;
+  border-radius: 18px;
+
+  background: rgba(15, 20, 34, 0.82);
+  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.18);
+}
+
+.settings-nav-item {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  padding: 13px 14px;
+  margin-bottom: 4px;
+
+  border: 0;
+  border-radius: 11px;
+
+  background: transparent;
+  color: #8d98b2;
+
+  font-size: 14px;
+  font-weight: 600;
+
+  cursor: pointer;
+  text-align: left;
+
+  transition:
+    background 0.2s ease,
+    color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.settings-nav-item:last-child {
+  margin-bottom: 0;
+}
+
+.settings-nav-item:hover {
+  background: #171d30;
+  color: #dce2f5;
+  transform: translateX(2px);
+}
+
+.settings-nav-item.active {
+  color: #ffffff;
+  background: linear-gradient(
+    135deg,
+    rgba(116, 82, 255, 0.22),
+    rgba(116, 82, 255, 0.08)
+  );
+
+  box-shadow:
+    inset 0 0 0 1px rgba(124, 92, 255, 0.28),
+    0 8px 24px rgba(91, 66, 220, 0.12);
+}
+
+.settings-nav-item svg {
+  flex-shrink: 0;
+}
+
+/* =========================================================
+   SETTINGS CONTENT
+========================================================= */
+
+.settings-content {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.settings-card {
+  border: 1px solid #20283b;
+  border-radius: 20px;
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(18, 23, 38, 0.98),
+      rgba(13, 18, 31, 0.98)
+    );
+
+  box-shadow:
+    0 20px 60px rgba(0, 0, 0, 0.18),
+    inset 0 1px 0 rgba(255, 255, 255, 0.015);
+
+  overflow: hidden;
+}
+
+/* =========================================================
+   CARD HEADER
+========================================================= */
+
+.settings-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+
+  padding: 22px 24px;
+
+  border-bottom: 1px solid #20283b;
+}
+
+.settings-card-title {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+}
+
+.settings-card-icon {
+  width: 40px;
+  height: 40px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 11px;
+
+  color: #9b82ff;
+  background: rgba(118, 85, 255, 0.13);
+  border: 1px solid rgba(118, 85, 255, 0.18);
+}
+
+.settings-card-title h2 {
+  margin: 0;
+  color: #edf1ff;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.settings-card-title p {
+  margin: 4px 0 0;
+  color: #6f7b96;
+  font-size: 12px;
+}
+
+/* =========================================================
+   FORM
+========================================================= */
+
+.settings-form {
+  padding: 24px;
+}
+
+.settings-form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+}
+
+.settings-field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.settings-field.full-width {
+  grid-column: 1 / -1;
+}
+
+.settings-field label {
+  color: #a6b0c8;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.settings-field input,
+.settings-field select,
+.settings-field textarea {
+  width: 100%;
+  box-sizing: border-box;
+
+  padding: 12px 14px;
+
+  border: 1px solid #293249;
+  border-radius: 10px;
+
+  outline: none;
+
+  background: #0d1321;
+  color: #edf1ff;
+
+  font-family: inherit;
+  font-size: 14px;
+
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    background 0.2s ease;
+}
+
+.settings-field textarea {
+  min-height: 100px;
+  resize: vertical;
+}
+
+.settings-field input::placeholder,
+.settings-field textarea::placeholder {
+  color: #56627b;
+}
+
+.settings-field input:hover,
+.settings-field select:hover,
+.settings-field textarea:hover {
+  border-color: #35415d;
+}
+
+.settings-field input:focus,
+.settings-field select:focus,
+.settings-field textarea:focus {
+  border-color: #7557ff;
+
+  box-shadow:
+    0 0 0 3px rgba(117, 87, 255, 0.12);
+
+  background: #101729;
+}
+
+/* =========================================================
+   TOGGLE SETTINGS
+========================================================= */
+
+.settings-options {
+  display: flex;
+  flex-direction: column;
+}
+
+.settings-option {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+
+  padding: 18px 24px;
+
+  border-bottom: 1px solid #1e2638;
+}
+
+.settings-option:last-child {
+  border-bottom: 0;
+}
+
+.settings-option-info {
+  min-width: 0;
+}
+
+.settings-option-info strong {
+  display: block;
+  margin-bottom: 5px;
+
+  color: #e7ebf8;
+  font-size: 14px;
+  font-weight: 650;
+}
+
+.settings-option-info span {
+  display: block;
+  color: #707c96;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+/* =========================================================
+   TOGGLE SWITCH
+========================================================= */
+
+.settings-toggle {
+  position: relative;
+
+  width: 46px;
+  height: 25px;
+
+  flex-shrink: 0;
+
+  border: 0;
+  border-radius: 999px;
+
+  background: #293248;
+
+  cursor: pointer;
+
+  transition: background 0.2s ease;
+}
+
+.settings-toggle::after {
+  content: "";
+
+  position: absolute;
+  top: 4px;
+  left: 4px;
+
+  width: 17px;
+  height: 17px;
+
+  border-radius: 50%;
+  background: #9aa4b9;
+
+  transition:
+    transform 0.2s ease,
+    background 0.2s ease;
+}
+
+.settings-toggle.active {
+  background: #7355ff;
+}
+
+.settings-toggle.active::after {
+  transform: translateX(21px);
+  background: #ffffff;
+}
+
+/* =========================================================
+   SAVE BUTTON
+========================================================= */
+
+.settings-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+
+  padding: 20px 24px;
+
+  border-top: 1px solid #20283b;
+}
+
+.settings-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+
+  padding: 11px 18px;
+
+  border-radius: 10px;
+
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 650;
+
+  cursor: pointer;
+
+  transition:
+    transform 0.2s ease,
+    background 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.settings-button.secondary {
+  border: 1px solid #293249;
+  background: #12192a;
+  color: #9da8bf;
+}
+
+.settings-button.secondary:hover {
+  background: #182036;
+  color: #e0e5f4;
+}
+
+.settings-button.primary {
+  border: 1px solid #7b5cff;
+  background: linear-gradient(135deg, #7657ff, #6545e8);
+  color: #ffffff;
+
+  box-shadow: 0 8px 22px rgba(104, 74, 235, 0.22);
+}
+
+.settings-button.primary:hover {
+  transform: translateY(-1px);
+  background: linear-gradient(135deg, #8367ff, #704ff0);
+}
+
+/* =========================================================
+   DANGER ZONE
+========================================================= */
+
+.settings-danger {
+  border: 1px solid rgba(239, 91, 103, 0.22);
+  background: rgba(50, 20, 28, 0.28);
+}
+
+.settings-danger .settings-card-header {
+  border-bottom-color: rgba(239, 91, 103, 0.16);
+}
+
+.settings-danger .settings-card-icon {
+  color: #ff747e;
+  background: rgba(239, 91, 103, 0.1);
+  border-color: rgba(239, 91, 103, 0.15);
+}
+
+.settings-danger-content {
+  padding: 22px 24px;
+}
+
+.settings-danger-content p {
+  margin: 0 0 16px;
+
+  color: #8d7780;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.settings-danger-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+
+  padding: 10px 15px;
+
+  border: 1px solid rgba(239, 91, 103, 0.3);
+  border-radius: 9px;
+
+  background: rgba(239, 91, 103, 0.08);
+  color: #ff7b84;
+
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 650;
+
+  cursor: pointer;
+
+  transition: background 0.2s ease;
+}
+
+.settings-danger-button:hover {
+  background: rgba(239, 91, 103, 0.14);
+}
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 1000px) {
+  .settings-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .settings-nav {
+    position: static;
+
+    display: flex;
+    gap: 6px;
+
+    overflow-x: auto;
+  }
+
+  .settings-nav-item {
+    width: auto;
+    flex: 0 0 auto;
+  }
+}
+
+@media (max-width: 700px) {
+  .settings-page {
+    padding: 24px 18px 45px;
+  }
+
+  .settings-header {
+    flex-direction: column;
+  }
+
+  .settings-header h1 {
+    font-size: 28px;
+  }
+
+  .settings-form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .settings-field.full-width {
+    grid-column: auto;
+  }
+
+  .settings-option {
+    align-items: flex-start;
+  }
+
+  .settings-card-header,
+  .settings-form,
+  .settings-danger-content {
+    padding-left: 18px;
+    padding-right: 18px;
+  }
+}

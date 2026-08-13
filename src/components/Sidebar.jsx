@@ -9,6 +9,7 @@ import {
   Settings,
   Sparkles,
   Users,
+  BriefcaseBusiness,
 } from "lucide-react";
 
 import { NavLink } from "react-router-dom";
@@ -68,7 +69,16 @@ function Sidebar() {
             <CalendarDays size={18} />
             <span>Timetable</span>
           </NavLink>
-
+                  
+               <NavLink
+  to="/attendance"
+  className={({ isActive }) =>
+    `sidebar-item ${isActive ? "active" : ""}`
+  }
+>
+  <GraduationCap size={18} />
+  <span>Attendance</span>
+</NavLink>
 
           <NavLink
             to="/academics"
@@ -91,7 +101,15 @@ function Sidebar() {
             <span>Library</span>
           </NavLink>
 
-
+                    <NavLink
+  to="/placements"
+  className={({ isActive }) =>
+    `sidebar-item ${isActive ? "active" : ""}`
+  }
+>
+  <BriefcaseBusiness size={18} />
+  <span>Placements</span>
+</NavLink> 
           <NavLink
             to="/events"
             className={({ isActive }) =>

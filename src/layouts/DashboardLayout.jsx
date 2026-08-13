@@ -1,16 +1,20 @@
 import Sidebar from "../components/Sidebar";
-import Navbar from "../components/Navbar";
+import Topbar from "../components/Topbar";
 
 function DashboardLayout({ children }) {
   return (
     <div className="app-layout">
 
+      {/* LEFT SIDEBAR */}
       <Sidebar />
 
+      {/* RIGHT APPLICATION AREA */}
       <div className="main-content">
 
-        <Navbar />
+        {/* TOP NAVIGATION */}
+        <Topbar />
 
+        {/* PAGE CONTENT */}
         <main className="page-content">
           {children}
         </main>

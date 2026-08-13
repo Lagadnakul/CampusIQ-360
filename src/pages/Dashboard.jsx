@@ -8,7 +8,6 @@ import {
 import StatCard from "../components/StatCard";
 import CampusPulse from "../components/CampusPulse";
 import CampusIQ from "../components/CampusIQ";
-
 import "../styles/pages/Dashboard.css";
 
 
@@ -111,7 +110,6 @@ function Dashboard() {
         <CampusPulse />
 
         <CampusIQ />
-
       </div>
 
     </div>
