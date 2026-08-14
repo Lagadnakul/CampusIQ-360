@@ -8,9 +8,56 @@ import {
   Wifi,
 } from "lucide-react";
 
+import useMonitoring from "../context/useMonitoring";
+
 import "../styles/pages/CampusVision.css";
 
 function CampusVision() {
+  // =========================================
+  // SHARED MONITORING DATA
+  // =========================================
+
+  const { monitoringData } = useMonitoring();
+
+  const {
+    cameraActive,
+    peopleCount,
+  } = monitoringData;
+
+
+  // =========================================
+  // CENTRAL LIBRARY LIVE DATA
+  // =========================================
+
+  const libraryCapacity = 200;
+
+  const libraryPeople = cameraActive
+    ? peopleCount
+    : 0;
+
+  const libraryOccupancy =
+    libraryCapacity > 0
+      ? Math.round(
+          (libraryPeople / libraryCapacity) * 100
+        )
+      : 0;
+
+
+  // =========================================
+  // LIBRARY STATUS
+  // =========================================
+
+  let libraryStatus = "FREE";
+
+  if (libraryOccupancy >= 90) {
+    libraryStatus = "FULL";
+  } else if (libraryOccupancy >= 70) {
+    libraryStatus = "CROWDED";
+  } else if (libraryOccupancy >= 50) {
+    libraryStatus = "MODERATE";
+  }
+
+
   return (
     <div className="campus-vision-page">
 
@@ -44,7 +91,11 @@ function CampusVision() {
 
           <div>
             <strong>Campus Live</strong>
-            <small>Monitoring active</small>
+            <small>
+              {cameraActive
+                ? "AI monitoring active"
+                : "Monitoring active"}
+            </small>
           </div>
 
         </div>
@@ -66,8 +117,16 @@ function CampusVision() {
 
           <div>
             <span>Total People</span>
-            <strong>320</strong>
-            <small>Across monitored zones</small>
+
+            <strong>
+              {cameraActive
+                ? peopleCount
+                : "—"}
+            </strong>
+
+            <small>
+              Central Library live count
+            </small>
           </div>
 
         </div>
@@ -81,8 +140,12 @@ function CampusVision() {
 
           <div>
             <span>Active Zones</span>
+
             <strong>4</strong>
-            <small>Currently monitored</small>
+
+            <small>
+              Currently monitored
+            </small>
           </div>
 
         </div>
@@ -96,8 +159,16 @@ function CampusVision() {
 
           <div>
             <span>System Status</span>
-            <strong>Online</strong>
-            <small>Detection services active</small>
+
+            <strong>
+              {cameraActive
+                ? "Online"
+                : "Standby"}
+            </strong>
+
+            <small>
+              Detection services
+            </small>
           </div>
 
         </div>
@@ -111,8 +182,16 @@ function CampusVision() {
 
           <div>
             <span>Last Updated</span>
-            <strong>Now</strong>
-            <small>Live occupancy data</small>
+
+            <strong>
+              {cameraActive
+                ? "Live"
+                : "—"}
+            </strong>
+
+            <small>
+              Live occupancy data
+            </small>
           </div>
 
         </div>
@@ -127,7 +206,9 @@ function CampusVision() {
       <div className="vision-main-grid">
 
 
-        {/* CAMERA PANEL */}
+        {/* =========================
+            CAMERA PANEL
+        ========================= */}
 
         <div className="vision-camera-card">
 
@@ -139,20 +220,29 @@ function CampusVision() {
 
                 <span className="camera-live-dot"></span>
 
-                <h2>Central Library</h2>
+                <h2>
+                  Central Library
+                </h2>
 
               </div>
 
               <p>
-                Live camera feed · Zone A
+                {cameraActive
+                  ? "Live AI camera feed · Zone A"
+                  : "Camera offline · Zone A"}
               </p>
 
             </div>
 
 
             <div className="camera-badge">
+
               <Camera size={14} />
-              LIVE
+
+              {cameraActive
+                ? "LIVE"
+                : "OFFLINE"}
+
             </div>
 
           </div>
@@ -164,51 +254,78 @@ function CampusVision() {
 
             <div className="camera-grid"></div>
 
+
             <div className="camera-center">
 
               <Camera size={42} />
 
               <h3>
-                Camera Preview
+                {cameraActive
+                  ? "AI Camera Connected"
+                  : "Camera Preview"}
               </h3>
 
               <p>
-                Person detection will appear here
+                {cameraActive
+                  ? `${peopleCount} ${
+                      peopleCount === 1
+                        ? "person"
+                        : "people"
+                    } detected`
+                  : "Person detection will appear here"}
               </p>
 
             </div>
 
 
-            {/* Fake detection boxes for prototype */}
+            {/* Detection box only when camera is active */}
 
-            <div className="detection-box box-one">
-              <span>Person</span>
-            </div>
+            {cameraActive && peopleCount > 0 && (
+              <>
+                <div className="detection-box box-one">
+                  <span>Person</span>
+                </div>
 
-            <div className="detection-box box-two">
-              <span>Person</span>
-            </div>
+                <div className="detection-box box-two">
+                  <span>Person</span>
+                </div>
 
-            <div className="detection-box box-three">
-              <span>Person</span>
-            </div>
+                <div className="detection-box box-three">
+                  <span>Person</span>
+                </div>
+              </>
+            )}
 
 
             <div className="camera-overlay-top">
-              <span>CAM-01</span>
-              <span>1080p</span>
+
+              <span>
+                CAM-01
+              </span>
+
+              <span>
+                1080p
+              </span>
+
             </div>
 
 
             <div className="camera-overlay-bottom">
+
               <span>
+
                 <span className="red-dot"></span>
-                LIVE
+
+                {cameraActive
+                  ? "LIVE"
+                  : "OFFLINE"}
+
               </span>
 
               <span>
                 10 Aug 2026 · 20:48
               </span>
+
             </div>
 
           </div>
@@ -219,13 +336,20 @@ function CampusVision() {
           <div className="camera-footer">
 
             <div>
+
               <MapPin size={14} />
+
               Central Library · Ground Floor
+
             </div>
 
+
             <div>
+
               <ShieldCheck size={14} />
+
               Anonymous detection
+
             </div>
 
           </div>
@@ -243,7 +367,9 @@ function CampusVision() {
 
             <div>
 
-              <h2>Occupancy</h2>
+              <h2>
+                Occupancy
+              </h2>
 
               <p>
                 Current zone statistics
@@ -265,11 +391,23 @@ function CampusVision() {
             </span>
 
             <strong>
-              73
+              {cameraActive
+                ? libraryPeople
+                : "—"}
             </strong>
 
             <small>
-              people currently inside
+
+              {cameraActive
+                ? `${
+                    libraryPeople
+                  } ${
+                    libraryPeople === 1
+                      ? "person"
+                      : "people"
+                  } currently inside`
+                : "Camera not connected"}
+
             </small>
 
           </div>
@@ -281,18 +419,30 @@ function CampusVision() {
 
             <div>
 
-              <span>Capacity</span>
+              <span>
+                Capacity
+              </span>
 
-              <strong>200</strong>
+              <strong>
+                {libraryCapacity}
+              </strong>
 
             </div>
 
 
             <div>
 
-              <span>Occupancy</span>
+              <span>
+                Occupancy
+              </span>
 
-              <strong>36.5%</strong>
+              <strong>
+
+                {cameraActive
+                  ? `${libraryOccupancy}%`
+                  : "—"}
+
+              </strong>
 
             </div>
 
@@ -307,10 +457,18 @@ function CampusVision() {
 
               <div
                 className="occupancy-progress-fill"
-                style={{ width: "36.5%" }}
+                style={{
+                  width: cameraActive
+                    ? `${Math.min(
+                        libraryOccupancy,
+                        100
+                      )}%`
+                    : "0%",
+                }}
               ></div>
 
             </div>
+
 
             <div className="progress-labels">
 
@@ -325,7 +483,17 @@ function CampusVision() {
 
           {/* Status */}
 
-          <div className="zone-status free">
+          <div
+            className={`zone-status ${
+              libraryStatus === "FREE"
+                ? "free"
+                : libraryStatus === "MODERATE"
+                ? "moderate"
+                : libraryStatus === "CROWDED"
+                ? "crowded"
+                : "full"
+            }`}
+          >
 
             <div className="status-left">
 
@@ -333,18 +501,37 @@ function CampusVision() {
 
               <div>
 
-                <strong>FREE</strong>
+                <strong>
+                  {cameraActive
+                    ? libraryStatus
+                    : "STANDBY"}
+                </strong>
 
                 <small>
-                  Comfortable space available
+
+                  {cameraActive
+                    ? libraryStatus === "FREE"
+                      ? "Comfortable space available"
+                      : libraryStatus === "MODERATE"
+                      ? "Moderate activity detected"
+                      : libraryStatus === "CROWDED"
+                      ? "High occupancy detected"
+                      : "Zone is at capacity"
+                    : "Waiting for camera"}
+
                 </small>
 
               </div>
 
             </div>
 
+
             <span>
-              36.5%
+
+              {cameraActive
+                ? `${libraryOccupancy}%`
+                : "—"}
+
             </span>
 
           </div>
@@ -358,7 +545,9 @@ function CampusVision() {
 
             <div>
 
-              <strong>Privacy Protected</strong>
+              <strong>
+                Privacy Protected
+              </strong>
 
               <p>
                 The system counts people without identifying
@@ -415,7 +604,11 @@ function CampusVision() {
               </div>
 
               <span className="zone-status-pill free-pill">
-                FREE
+
+                {cameraActive
+                  ? libraryStatus
+                  : "STANDBY"}
+
               </span>
 
             </div>
@@ -425,15 +618,34 @@ function CampusVision() {
             </h3>
 
             <p>
-              73 / 200 people
+
+              {cameraActive
+                ? `${libraryPeople} / ${libraryCapacity} people`
+                : `— / ${libraryCapacity} people`}
+
             </p>
 
             <div className="mini-progress">
-              <div style={{ width: "36.5%" }}></div>
+
+              <div
+                style={{
+                  width: cameraActive
+                    ? `${Math.min(
+                        libraryOccupancy,
+                        100
+                      )}%`
+                    : "0%",
+                }}
+              ></div>
+
             </div>
 
             <strong>
-              36.5% occupancy
+
+              {cameraActive
+                ? `${libraryOccupancy}% occupancy`
+                : "Camera offline"}
+
             </strong>
 
           </div>
@@ -464,10 +676,14 @@ function CampusVision() {
             </p>
 
             <div className="mini-progress">
+
               <div
                 className="crowded-progress"
-                style={{ width: "92.5%" }}
+                style={{
+                  width: "92.5%",
+                }}
               ></div>
+
             </div>
 
             <strong>
@@ -502,10 +718,14 @@ function CampusVision() {
             </p>
 
             <div className="mini-progress">
+
               <div
                 className="moderate-progress"
-                style={{ width: "62%" }}
+                style={{
+                  width: "62%",
+                }}
               ></div>
+
             </div>
 
             <strong>
@@ -540,10 +760,14 @@ function CampusVision() {
             </p>
 
             <div className="mini-progress">
+
               <div
                 className="full-progress"
-                style={{ width: "95%" }}
+                style={{
+                  width: "95%",
+                }}
               ></div>
+
             </div>
 
             <strong>
@@ -574,12 +798,19 @@ function CampusVision() {
           </span>
 
           <h3>
-            Central Library is currently a quieter option.
+
+            {cameraActive
+              ? "Central Library occupancy is being monitored live."
+              : "Central Library is currently waiting for camera data."}
+
           </h3>
 
           <p>
-            The library has approximately 36.5% occupancy,
-            while the cafeteria is currently crowded.
+
+            {cameraActive
+              ? `The library currently has approximately ${libraryOccupancy}% occupancy based on AI person detection.`
+              : "Start the camera from Camera Monitoring to begin receiving live occupancy data."}
+
           </p>
 
         </div>

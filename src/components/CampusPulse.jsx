@@ -7,6 +7,7 @@ import {
 } from "lucide-react";
 
 import "../styles/components/CampusPulse.css";
+import useMonitoring from "../context/useMonitoring";
 
 const zones = [
   {
@@ -40,6 +41,8 @@ const zones = [
 ];
 
 function CampusPulse() {
+      const { monitoringData } = useMonitoring();
+
   return (
     <section className="campus-pulse">
 

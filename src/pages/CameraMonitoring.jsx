@@ -14,9 +14,17 @@ import * as cocoSsd from "@tensorflow-models/coco-ssd";
 import "@tensorflow/tfjs";
 
 import "../styles/pages/CameraMonitoring.css";
+import useMonitoring from "../context/useMonitoring";
 
 
 function CameraMonitoring() {
+
+  // ==========================================
+  // MONITORING CONTEXT
+  // ==========================================
+
+  const { setMonitoringData } = useMonitoring();
+
 
   // ==========================================
   // REFERENCES
@@ -45,8 +53,9 @@ function CameraMonitoring() {
   const [framesAnalyzed, setFramesAnalyzed] = useState(0);
   const [fps, setFps] = useState(0);
 
+
   // ==========================================
-  // LOAD AI MODEL
+  // LOAD COCO-SSD MODEL
   // ==========================================
 
   useEffect(() => {
@@ -63,11 +72,14 @@ function CameraMonitoring() {
 
         setModelLoading(false);
 
-        console.log("COCO-SSD model loaded successfully!");
+        console.log("COCO-SSD model loaded successfully.");
 
       } catch (error) {
 
-        console.error("AI model loading error:", error);
+        console.error(
+          "AI model loading error:",
+          error
+        );
 
         setModelLoading(false);
 
@@ -78,6 +90,30 @@ function CameraMonitoring() {
     loadModel();
 
   }, []);
+
+
+  // ==========================================
+  // SYNC DATA WITH MONITORING CONTEXT
+  // ==========================================
+
+  useEffect(() => {
+
+    setMonitoringData({
+      cameraActive,
+      peopleCount,
+      confidence,
+      fps,
+      framesAnalyzed,
+    });
+
+  }, [
+    cameraActive,
+    peopleCount,
+    confidence,
+    fps,
+    framesAnalyzed,
+    setMonitoringData,
+  ]);
 
 
   // ==========================================
@@ -124,7 +160,6 @@ function CameraMonitoring() {
 
       setCameraActive(true);
 
-
     } catch (error) {
 
       console.error(
@@ -149,7 +184,7 @@ function CameraMonitoring() {
 
   const stopCamera = () => {
 
-    // Stop AI loop
+    // Stop AI animation loop
 
     if (animationRef.current) {
 
@@ -162,7 +197,7 @@ function CameraMonitoring() {
     }
 
 
-    // Stop webcam
+    // Stop webcam tracks
 
     if (streamRef.current) {
 
@@ -179,7 +214,7 @@ function CameraMonitoring() {
     }
 
 
-    // Remove video
+    // Remove video stream
 
     if (videoRef.current) {
 
@@ -188,7 +223,7 @@ function CameraMonitoring() {
     }
 
 
-    // Clear canvas
+    // Clear detection canvas
 
     if (canvasRef.current) {
 
@@ -208,14 +243,12 @@ function CameraMonitoring() {
     }
 
 
+    // Reset local state
+
     setCameraActive(false);
-
     setPeopleCount(0);
-
     setConfidence(0);
-
     setFramesAnalyzed(0);
-
     setFps(0);
 
   };
@@ -225,9 +258,7 @@ function CameraMonitoring() {
   // DRAW DETECTION BOXES
   // ==========================================
 
-  const drawDetections = (
-    predictions
-  ) => {
+  const drawDetections = (predictions) => {
 
     const video =
       videoRef.current;
@@ -245,8 +276,7 @@ function CameraMonitoring() {
       canvas.getContext("2d");
 
 
-    // Match canvas with actual
-    // camera resolution
+    // Match canvas to actual video resolution
 
     canvas.width =
       video.videoWidth;
@@ -264,7 +294,7 @@ function CameraMonitoring() {
 
 
     // ========================================
-    // ONLY DRAW PEOPLE
+    // FILTER ONLY PEOPLE
     // ========================================
 
     const people =
@@ -276,74 +306,72 @@ function CameraMonitoring() {
 
 
     // ========================================
-    // DRAW EACH PERSON
+    // DRAW PERSON BOXES
     // ========================================
 
-    people.forEach(
-      (person) => {
+    people.forEach((person) => {
 
-        const [
-          x,
-          y,
-          width,
-          height,
-        ] = person.bbox;
-
-
-        // Bounding box
-
-        ctx.strokeStyle =
-          "#8b5cf6";
-
-        ctx.lineWidth = 3;
-
-        ctx.strokeRect(
-          x,
-          y,
-          width,
-          height
-        );
+      const [
+        x,
+        y,
+        width,
+        height,
+      ] = person.bbox;
 
 
-        // ====================================
-        // LABEL BACKGROUND
-        // ====================================
+      // Bounding box
 
-        ctx.fillStyle =
-          "#8b5cf6";
+      ctx.strokeStyle =
+        "#8b5cf6";
 
-        ctx.fillRect(
-          x,
-          y - 28,
-          120,
-          28
-        );
+      ctx.lineWidth = 3;
+
+      ctx.strokeRect(
+        x,
+        y,
+        width,
+        height
+      );
 
 
-        // ====================================
-        // LABEL TEXT
-        // ====================================
+      // ====================================
+      // LABEL BACKGROUND
+      // ====================================
 
-        ctx.fillStyle =
-          "#ffffff";
+      ctx.fillStyle =
+        "#8b5cf6";
 
-        ctx.font =
-          "bold 14px Arial";
+      ctx.fillRect(
+        x,
+        Math.max(0, y - 28),
+        120,
+        28
+      );
 
-        ctx.fillText(
-          `Person ${Math.round(
-            person.score * 100
-          )}%`,
-          x + 8,
-          y - 9
-        );
 
-      }
-    );
+      // ====================================
+      // LABEL TEXT
+      // ====================================
+
+      ctx.fillStyle =
+        "#ffffff";
+
+      ctx.font =
+        "bold 14px Arial";
+
+      ctx.fillText(
+        `Person ${Math.round(
+          person.score * 100
+        )}%`,
+        x + 8,
+        Math.max(19, y - 9)
+      );
+
+    });
 
 
     // ========================================
-    // UPDATE COUNT
+    // UPDATE PEOPLE COUNT
     // ========================================
 
     setPeopleCount(
@@ -413,9 +441,7 @@ function CameraMonitoring() {
     try {
 
       const predictions =
-        await model.detect(
-          video
-        );
+        await model.detect(video);
 
 
       drawDetections(
@@ -427,7 +453,6 @@ function CameraMonitoring() {
         (previous) =>
           previous + 1
       );
-
 
     } catch (error) {
 
@@ -450,13 +475,14 @@ function CameraMonitoring() {
 
 
   // ==========================================
-  // START AI WHEN CAMERA STARTS
+  // START AI WHEN CAMERA IS ACTIVE
   // ==========================================
 
   useEffect(() => {
 
     if (
       cameraActive &&
+      !modelLoading &&
       modelRef.current
     ) {
 
@@ -475,11 +501,16 @@ function CameraMonitoring() {
           animationRef.current
         );
 
+        animationRef.current = null;
+
       }
 
     };
 
-  }, [cameraActive, modelLoading]);
+  }, [
+    cameraActive,
+    modelLoading,
+  ]);
 
 
   // ==========================================
@@ -493,22 +524,63 @@ function CameraMonitoring() {
     }
 
 
-    const interval =
-      setInterval(() => {
+    let frameCount = 0;
+
+    let lastTime =
+      performance.now();
+
+
+    const calculateFPS = () => {
+
+      frameCount++;
+
+      const currentTime =
+        performance.now();
+
+
+      const elapsed =
+        currentTime - lastTime;
+
+
+      if (elapsed >= 1000) {
+
+        const calculatedFPS =
+          Math.round(
+            (frameCount * 1000) /
+            elapsed
+          );
+
 
         setFps(
-          Math.floor(
-            Math.random() * 4 + 10
-          )
+          calculatedFPS
         );
 
-      }, 1000);
+
+        frameCount = 0;
+
+        lastTime =
+          currentTime;
+
+      }
+
+
+      requestAnimationFrame(
+        calculateFPS
+      );
+
+    };
+
+
+    const fpsAnimation =
+      requestAnimationFrame(
+        calculateFPS
+      );
 
 
     return () => {
 
-      clearInterval(
-        interval
+      cancelAnimationFrame(
+        fpsAnimation
       );
 
     };
@@ -1155,10 +1227,9 @@ function CameraMonitoring() {
 
 
           <p>
-            Detected people can later be
-            connected to Campus Pulse,
-            Campus Vision and campus
-            occupancy analytics.
+            Detected people are shared
+            with the campus monitoring
+            system for occupancy analytics.
           </p>
 
         </div>

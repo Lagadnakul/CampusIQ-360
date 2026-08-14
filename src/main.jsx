@@ -1,11 +1,27 @@
-import { StrictMode } from "react";
-import { createRoot } from "react-dom/client";
+import React from "react";
+import ReactDOM from "react-dom/client";
 
-import "./App.css";
-import App from "./App.jsx";
+import App from "./App";
 
-createRoot(document.getElementById("root")).render(
-  <StrictMode>
-    <App />
-  </StrictMode>
+import CampusProvider from "./context/CampusProvider";
+import MonitoringProvider from "./context/MonitoringProvider";
+
+import "./index.css";
+
+ReactDOM.createRoot(
+  document.getElementById("root")
+).render(
+  <React.StrictMode>
+
+    <CampusProvider>
+
+      <MonitoringProvider>
+
+        <App />
+
+      </MonitoringProvider>
+
+    </CampusProvider>
+
+  </React.StrictMode>
 );

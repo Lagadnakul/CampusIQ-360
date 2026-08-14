@@ -8,9 +8,6 @@ import Dashboard from "../pages/Dashboard";
 import DashboardLayout from "../layouts/DashboardLayout";
 
 import CampusVision from "../pages/CampusVision";
-import CampusPulse from "../pages/CampusPulse";
-import CameraMonitoring from "../pages/CameraMonitoring";
-
 import Attendance from "../pages/Attendance";
 import Timetable from "../pages/Timetable";
 import Library from "../pages/Library";
@@ -19,9 +16,14 @@ import Placements from "../pages/Placements";
 import Profile from "../pages/Profile";
 import Settings from "../pages/Settings";
 import Academics from "../pages/Academics";
+import CampusPulse from "../pages/CampusPulse";
+import CameraMonitoring from "../pages/CameraMonitoring";
+
 
 function AppRoutes() {
+
   return (
+
     <BrowserRouter>
 
       <DashboardLayout>
@@ -53,6 +55,21 @@ function AppRoutes() {
           />
 
           <Route
+            path="/campus-pulse"
+            element={<CampusPulse />}
+          />
+
+          <Route
+            path="/camera-monitoring"
+            element={<CameraMonitoring />}
+          />
+
+
+          {/* =========================
+              ACADEMICS
+          ========================= */}
+
+          <Route
             path="/attendance"
             element={<Attendance />}
           />
@@ -61,6 +78,16 @@ function AppRoutes() {
             path="/timetable"
             element={<Timetable />}
           />
+
+          <Route
+            path="/academics"
+            element={<Academics />}
+          />
+
+
+          {/* =========================
+              CAMPUS SERVICES
+          ========================= */}
 
           <Route
             path="/library"
@@ -75,26 +102,6 @@ function AppRoutes() {
           <Route
             path="/placements"
             element={<Placements />}
-          />
-
-          <Route
-            path="/academics"
-            element={<Academics />}
-          />
-
-
-          {/* =========================
-              INTELLIGENCE
-          ========================= */}
-
-          <Route
-            path="/campus-pulse"
-            element={<CampusPulse />}
-          />
-
-          <Route
-            path="/camera-monitoring"
-            element={<CameraMonitoring />}
           />
 
 
@@ -117,7 +124,9 @@ function AppRoutes() {
       </DashboardLayout>
 
     </BrowserRouter>
+
   );
 }
+
 
 export default AppRoutes;

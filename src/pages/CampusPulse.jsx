@@ -13,6 +13,8 @@ import {
 
 import { useEffect, useState } from "react";
 
+import useMonitoring from "../context/useMonitoring";
+
 import {
   getInitialZones,
   generatePulseUpdate,
@@ -22,6 +24,18 @@ import "../styles/pages/CampusPulse.css";
 
 
 function CampusPulse() {
+
+  // =========================================
+  // SHARED AI MONITORING DATA
+  // =========================================
+
+  const { monitoringData } = useMonitoring();
+
+  const {
+    cameraActive,
+    peopleCount,
+  } = monitoringData;
+
 
   // =========================================
   // LIVE CAMPUS ZONES
@@ -34,8 +48,6 @@ function CampusPulse() {
 
   // =========================================
   // ZONE ICONS
-  // Icons stay inside the UI layer.
-  // Simulator only handles data.
   // =========================================
 
   const zoneIcons = {
@@ -69,34 +81,63 @@ function CampusPulse() {
 
 
   // =========================================
+  // CONNECT CAMERA DATA TO LIBRARY
+  // =========================================
+
+  const displayZones = zones.map(
+    (zone, index) => {
+
+      if (
+        index === 0 &&
+        zone.name === "Central Library" &&
+        cameraActive
+      ) {
+
+        return {
+          ...zone,
+          people: peopleCount,
+        };
+
+      }
+
+      return zone;
+
+    }
+  );
+
+
+  // =========================================
   // CAMPUS CALCULATIONS
   // =========================================
 
-  const totalPeople = zones.reduce(
+  const totalPeople = displayZones.reduce(
     (total, zone) =>
       total + zone.people,
     0
   );
 
 
-  const totalCapacity = zones.reduce(
+  const totalCapacity = displayZones.reduce(
     (total, zone) =>
       total + zone.capacity,
     0
   );
 
 
-  const campusOccupancy = Math.round(
-    (totalPeople / totalCapacity) * 100
-  );
+  const campusOccupancy =
+    totalCapacity > 0
+      ? Math.round(
+          (totalPeople / totalCapacity) * 100
+        )
+      : 0;
 
 
-  const busiestZone = zones.reduce(
+  const busiestZone = displayZones.reduce(
     (current, zone) =>
       zone.people > current.people
         ? zone
         : current,
-    zones[0]
+    displayZones[0]
   );
 
 
@@ -150,7 +191,9 @@ function CampusPulse() {
             </strong>
 
             <span>
-              Monitoring campus activity
+              {cameraActive
+                ? "AI monitoring campus activity"
+                : "Monitoring campus activity"}
             </span>
 
           </div>
@@ -267,22 +310,20 @@ function CampusPulse() {
 
           <strong className="pulse-stat-value small">
 
-            {busiestZone.name}
+            {busiestZone?.name ?? "—"}
 
           </strong>
 
 
           <div className="pulse-stat-sub">
 
-            {busiestZone.people} people ·{" "}
-
-            {Math.round(
-              (busiestZone.people /
-                busiestZone.capacity) *
-                100
-            )}
-
-            % capacity
+            {busiestZone
+              ? `${busiestZone.people} people · ${Math.round(
+                  (busiestZone.people /
+                    busiestZone.capacity) *
+                    100
+                )}% capacity`
+              : "No data"}
 
           </div>
 
@@ -393,7 +434,7 @@ function CampusPulse() {
               </strong>
 
               <small>
-                {zones[0]?.people ?? 0}
+                {displayZones[0]?.people ?? 0}
               </small>
 
             </div>
@@ -408,7 +449,7 @@ function CampusPulse() {
               </strong>
 
               <small>
-                {zones[1]?.people ?? 0}
+                {displayZones[1]?.people ?? 0}
               </small>
 
             </div>
@@ -423,7 +464,7 @@ function CampusPulse() {
               </strong>
 
               <small>
-                {zones[2]?.people ?? 0}
+                {displayZones[2]?.people ?? 0}
               </small>
 
             </div>
@@ -438,7 +479,7 @@ function CampusPulse() {
               </strong>
 
               <small>
-                {zones[3]?.people ?? 0}
+                {displayZones[3]?.people ?? 0}
               </small>
 
             </div>
@@ -637,11 +678,7 @@ function CampusPulse() {
 
         <div className="zone-grid">
 
-          {zones.map((zone) => {
-
-            // IMPORTANT:
-            // Get icon from local mapping.
-            // Never depend on simulator for React components.
+          {displayZones.map((zone) => {
 
             const Icon =
               zoneIcons[zone.name] ||
@@ -649,11 +686,13 @@ function CampusPulse() {
 
 
             const occupancy =
-              Math.round(
-                (zone.people /
-                  zone.capacity) *
-                  100
-              );
+              zone.capacity > 0
+                ? Math.round(
+                    (zone.people /
+                      zone.capacity) *
+                      100
+                  )
+                : 0;
 
 
             return (
@@ -679,7 +718,16 @@ function CampusPulse() {
                     className={`zone-status ${zone.statusType}`}
                   >
 
-                    {zone.status}
+                    {zone.name === "Central Library" &&
+                    cameraActive
+                      ? occupancy >= 90
+                        ? "FULL"
+                        : occupancy >= 70
+                        ? "CROWDED"
+                        : occupancy >= 50
+                        ? "MODERATE"
+                        : "FREE"
+                      : zone.status}
 
                   </span>
 
@@ -983,14 +1031,20 @@ function CampusPulse() {
             <span className="camera-live-dot"></span>
 
             <strong>
-              8 / 8 Cameras Online
+              {cameraActive
+                ? `1 / 1 AI Camera Online`
+                : "Camera Standby"}
             </strong>
 
           </div>
 
 
           <span className="last-update">
-            Updated just now
+
+            {cameraActive
+              ? "Updated just now"
+              : "Waiting for camera"}
+
           </span>
 
         </div>
