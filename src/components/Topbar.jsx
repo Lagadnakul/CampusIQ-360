@@ -5,6 +5,7 @@ import {
   LogOut,
   Settings,
   UserRound,
+  Search,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
@@ -42,8 +43,8 @@ function Topbar() {
       <div className="topbar-search">
 
         <span className="search-icon">
-          ⌕
-        </span>
+  <Search size={19} />
+</span>
 
         <input
           type="text"
