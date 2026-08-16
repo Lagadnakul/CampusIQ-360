@@ -7,32 +7,47 @@ import {
 import Dashboard from "../pages/Dashboard";
 import DashboardLayout from "../layouts/DashboardLayout";
 
+// =========================================
+// CAMPUS
+// =========================================
 import CampusVision from "../pages/CampusVision";
+import CampusPulse from "../pages/CampusPulse";
+import CampusIQ from "../pages/CampusIQ";
+import CameraMonitoring from "../pages/CameraMonitoring";
+import CampusRules from "../pages/CampusRules";
+
+// =========================================
+// ACADEMICS
+// =========================================
 import Attendance from "../pages/Attendance";
 import Timetable from "../pages/Timetable";
+import Academics from "../pages/Academics";
+
+// =========================================
+// CAMPUS SERVICES
+// =========================================
 import Library from "../pages/Library";
 import Events from "../pages/Events";
 import Placements from "../pages/Placements";
+
+// =========================================
+// USER
+// =========================================
 import Profile from "../pages/Profile";
 import Settings from "../pages/Settings";
-import Academics from "../pages/Academics";
-import CampusPulse from "../pages/CampusPulse";
-import CameraMonitoring from "../pages/CameraMonitoring";
 
 
 function AppRoutes() {
-
   return (
-
     <BrowserRouter>
 
       <DashboardLayout>
 
         <Routes>
 
-          {/* =========================
+          {/* =========================================
               DASHBOARD
-          ========================= */}
+          ========================================= */}
 
           <Route
             path="/"
@@ -45,9 +60,9 @@ function AppRoutes() {
           />
 
 
-          {/* =========================
+          {/* =========================================
               CAMPUS
-          ========================= */}
+          ========================================= */}
 
           <Route
             path="/campus-vision"
@@ -60,14 +75,30 @@ function AppRoutes() {
           />
 
           <Route
+            path="/campus-iq"
+            element={<CampusIQ />}
+          />
+
+          <Route
             path="/camera-monitoring"
             element={<CameraMonitoring />}
           />
 
+          <Route
+            path="/campus-rules"
+            element={<CampusRules />}
+          />
 
-          {/* =========================
+          {/* Optional old URL support */}
+          <Route
+            path="/campusrules"
+            element={<CampusRules />}
+          />
+
+
+          {/* =========================================
               ACADEMICS
-          ========================= */}
+          ========================================= */}
 
           <Route
             path="/attendance"
@@ -85,9 +116,9 @@ function AppRoutes() {
           />
 
 
-          {/* =========================
+          {/* =========================================
               CAMPUS SERVICES
-          ========================= */}
+          ========================================= */}
 
           <Route
             path="/library"
@@ -105,9 +136,9 @@ function AppRoutes() {
           />
 
 
-          {/* =========================
+          {/* =========================================
               USER
-          ========================= */}
+          ========================================= */}
 
           <Route
             path="/profile"
@@ -124,7 +155,6 @@ function AppRoutes() {
       </DashboardLayout>
 
     </BrowserRouter>
-
   );
 }
 

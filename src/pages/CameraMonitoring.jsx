@@ -35,6 +35,8 @@ function CameraMonitoring() {
   const streamRef = useRef(null);
   const modelRef = useRef(null);
   const animationRef = useRef(null);
+  const fpsAnimationRef = useRef(null);
+
 
   // ==========================================
   // CAMERA STATE
@@ -42,6 +44,7 @@ function CameraMonitoring() {
 
   const [cameraActive, setCameraActive] = useState(false);
   const [cameraError, setCameraError] = useState("");
+
 
   // ==========================================
   // AI STATE
@@ -60,6 +63,8 @@ function CameraMonitoring() {
 
   useEffect(() => {
 
+    let mounted = true;
+
     const loadModel = async () => {
 
       try {
@@ -68,11 +73,17 @@ function CameraMonitoring() {
 
         const model = await cocoSsd.load();
 
+        if (!mounted) {
+          return;
+        }
+
         modelRef.current = model;
 
         setModelLoading(false);
 
-        console.log("COCO-SSD model loaded successfully.");
+        console.log(
+          "COCO-SSD model loaded successfully."
+        );
 
       } catch (error) {
 
@@ -81,13 +92,20 @@ function CameraMonitoring() {
           error
         );
 
-        setModelLoading(false);
+        if (mounted) {
+          setModelLoading(false);
+        }
 
       }
 
     };
 
     loadModel();
+
+
+    return () => {
+      mounted = false;
+    };
 
   }, []);
 
@@ -122,9 +140,20 @@ function CameraMonitoring() {
 
   const startCamera = async () => {
 
+    // Prevent starting another stream
+    // while one is already active.
+
+    if (streamRef.current) {
+      return;
+    }
+
+
     try {
 
       setCameraError("");
+
+      console.log("Requesting camera access...");
+
 
       const stream =
         await navigator.mediaDevices.getUserMedia({
@@ -146,17 +175,23 @@ function CameraMonitoring() {
         });
 
 
+      console.log(
+        "Camera stream received."
+      );
+
+
+      // Store stream first.
+
       streamRef.current = stream;
 
 
-      if (videoRef.current) {
-
-        videoRef.current.srcObject = stream;
-
-        await videoRef.current.play();
-
-      }
-
+      // IMPORTANT:
+      // We do NOT call video.play() here.
+      //
+      // React has to render the video element first.
+      //
+      // The useEffect below will attach the stream
+      // and safely start playback.
 
       setCameraActive(true);
 
@@ -179,12 +214,152 @@ function CameraMonitoring() {
 
 
   // ==========================================
+  // ATTACH STREAM TO VIDEO
+  // ==========================================
+
+  useEffect(() => {
+
+    if (!cameraActive) {
+      return;
+    }
+
+
+    const video =
+      videoRef.current;
+
+    const stream =
+      streamRef.current;
+
+
+    if (!video || !stream) {
+      return;
+    }
+
+
+    let cancelled = false;
+
+
+    const startVideoPlayback = async () => {
+
+      try {
+
+        // Attach stream only once.
+
+        if (video.srcObject !== stream) {
+          video.srcObject = stream;
+        }
+
+
+        // Wait until the browser has enough
+        // information about the video.
+
+        if (video.readyState < 2) {
+
+          await new Promise((resolve) => {
+
+            const handleLoadedMetadata = () => {
+
+              video.removeEventListener(
+                "loadedmetadata",
+                handleLoadedMetadata
+              );
+
+              resolve();
+
+            };
+
+
+            video.addEventListener(
+              "loadedmetadata",
+              handleLoadedMetadata
+            );
+
+          });
+
+        }
+
+
+        if (cancelled) {
+          return;
+        }
+
+
+        // Only play if the video is paused.
+
+        if (video.paused) {
+
+          await video.play();
+
+        }
+
+
+        console.log(
+          "Camera video started successfully."
+        );
+
+      } catch (error) {
+
+        if (cancelled) {
+          return;
+        }
+
+
+        // AbortError can happen if the stream
+        // is stopped while playback is starting.
+        //
+        // We don't show it as a camera failure
+        // because it is a lifecycle interruption.
+
+        if (error?.name === "AbortError") {
+
+          console.log(
+            "Camera playback was interrupted."
+          );
+
+          return;
+
+        }
+
+
+        console.error(
+          "Video playback error:",
+          error
+        );
+
+
+        setCameraError(
+          "The camera opened, but the video could not be started."
+        );
+
+        setCameraActive(false);
+
+      }
+
+    };
+
+
+    startVideoPlayback();
+
+
+    return () => {
+
+      cancelled = true;
+
+    };
+
+  }, [cameraActive]);
+
+
+  // ==========================================
   // STOP CAMERA
   // ==========================================
 
   const stopCamera = () => {
 
-    // Stop AI animation loop
+    console.log("Stopping camera...");
+
+
+    // Stop AI animation.
 
     if (animationRef.current) {
 
@@ -197,7 +372,20 @@ function CameraMonitoring() {
     }
 
 
-    // Stop webcam tracks
+    // Stop FPS animation.
+
+    if (fpsAnimationRef.current) {
+
+      cancelAnimationFrame(
+        fpsAnimationRef.current
+      );
+
+      fpsAnimationRef.current = null;
+
+    }
+
+
+    // Stop webcam tracks.
 
     if (streamRef.current) {
 
@@ -214,16 +402,18 @@ function CameraMonitoring() {
     }
 
 
-    // Remove video stream
+    // Detach video stream.
 
     if (videoRef.current) {
+
+      videoRef.current.pause();
 
       videoRef.current.srcObject = null;
 
     }
 
 
-    // Clear detection canvas
+    // Clear detection canvas.
 
     if (canvasRef.current) {
 
@@ -233,17 +423,22 @@ function CameraMonitoring() {
       const ctx =
         canvas.getContext("2d");
 
-      ctx.clearRect(
-        0,
-        0,
-        canvas.width,
-        canvas.height
-      );
+
+      if (ctx) {
+
+        ctx.clearRect(
+          0,
+          0,
+          canvas.width,
+          canvas.height
+        );
+
+      }
 
     }
 
 
-    // Reset local state
+    // Reset state.
 
     setCameraActive(false);
     setPeopleCount(0);
@@ -272,11 +467,24 @@ function CameraMonitoring() {
     }
 
 
+    if (
+      video.videoWidth === 0 ||
+      video.videoHeight === 0
+    ) {
+      return;
+    }
+
+
     const ctx =
       canvas.getContext("2d");
 
 
-    // Match canvas to actual video resolution
+    if (!ctx) {
+      return;
+    }
+
+
+    // Match canvas to actual video resolution.
 
     canvas.width =
       video.videoWidth;
@@ -319,7 +527,7 @@ function CameraMonitoring() {
       ] = person.bbox;
 
 
-      // Bounding box
+      // Bounding box.
 
       ctx.strokeStyle =
         "#8b5cf6";
@@ -425,13 +633,18 @@ function CameraMonitoring() {
     if (
       !video ||
       !model ||
+      !cameraActive ||
       video.readyState < 2
     ) {
 
-      animationRef.current =
-        requestAnimationFrame(
-          detectPeople
-        );
+      if (cameraActive) {
+
+        animationRef.current =
+          requestAnimationFrame(
+            detectPeople
+          );
+
+      }
 
       return;
 
@@ -442,6 +655,13 @@ function CameraMonitoring() {
 
       const predictions =
         await model.detect(video);
+
+
+      // Make sure camera is still active.
+
+      if (!streamRef.current) {
+        return;
+      }
 
 
       drawDetections(
@@ -464,12 +684,16 @@ function CameraMonitoring() {
     }
 
 
-    // Continue detection
+    // Continue detection.
 
-    animationRef.current =
-      requestAnimationFrame(
-        detectPeople
-      );
+    if (streamRef.current) {
+
+      animationRef.current =
+        requestAnimationFrame(
+          detectPeople
+        );
+
+    }
 
   };
 
@@ -486,7 +710,35 @@ function CameraMonitoring() {
       modelRef.current
     ) {
 
-      detectPeople();
+      // Small delay gives the browser time
+      // to finish rendering the video.
+
+      const timer =
+        setTimeout(() => {
+
+          detectPeople();
+
+        }, 100);
+
+
+      return () => {
+
+        clearTimeout(timer);
+
+
+        if (
+          animationRef.current
+        ) {
+
+          cancelAnimationFrame(
+            animationRef.current
+          );
+
+          animationRef.current = null;
+
+        }
+
+      };
 
     }
 
@@ -532,7 +784,13 @@ function CameraMonitoring() {
 
     const calculateFPS = () => {
 
+      if (!streamRef.current) {
+        return;
+      }
+
+
       frameCount++;
+
 
       const currentTime =
         performance.now();
@@ -564,14 +822,15 @@ function CameraMonitoring() {
       }
 
 
-      requestAnimationFrame(
-        calculateFPS
-      );
+      fpsAnimationRef.current =
+        requestAnimationFrame(
+          calculateFPS
+        );
 
     };
 
 
-    const fpsAnimation =
+    fpsAnimationRef.current =
       requestAnimationFrame(
         calculateFPS
       );
@@ -579,9 +838,17 @@ function CameraMonitoring() {
 
     return () => {
 
-      cancelAnimationFrame(
-        fpsAnimation
-      );
+      if (
+        fpsAnimationRef.current
+      ) {
+
+        cancelAnimationFrame(
+          fpsAnimationRef.current
+        );
+
+        fpsAnimationRef.current = null;
+
+      }
 
     };
 
@@ -589,7 +856,7 @@ function CameraMonitoring() {
 
 
   // ==========================================
-  // CLEANUP
+  // CLEANUP WHEN PAGE UNMOUNTS
   // ==========================================
 
   useEffect(() => {
@@ -608,6 +875,17 @@ function CameraMonitoring() {
 
 
       if (
+        fpsAnimationRef.current
+      ) {
+
+        cancelAnimationFrame(
+          fpsAnimationRef.current
+        );
+
+      }
+
+
+      if (
         streamRef.current
       ) {
 
@@ -617,6 +895,17 @@ function CameraMonitoring() {
             (track) =>
               track.stop()
           );
+
+        streamRef.current = null;
+
+      }
+
+
+      if (videoRef.current) {
+
+        videoRef.current.pause();
+
+        videoRef.current.srcObject = null;
 
       }
 
@@ -765,42 +1054,42 @@ function CameraMonitoring() {
           <div className="camera-preview">
 
 
-            {cameraActive ? (
+            {/* =================================
+                VIDEO IS ALWAYS IN THE DOM
+                ================================= */}
 
-              <>
-
-                <video
-                  ref={videoRef}
-                  autoPlay
-                  playsInline
-                  muted
-                  className="camera-video"
-                />
-
-
-                <canvas
-                  ref={canvasRef}
-                  className="detection-canvas"
-                />
+            <video
+              ref={videoRef}
+              autoPlay
+              playsInline
+              muted
+              className={`camera-video ${
+                cameraActive
+                  ? "visible"
+                  : "hidden"
+              }`}
+            />
 
 
-                <div className="camera-active-overlay">
+            {/* =================================
+                DETECTION CANVAS
+                ================================= */}
 
-                  <div className="camera-scanning">
+            <canvas
+              ref={canvasRef}
+              className={`detection-canvas ${
+                cameraActive
+                  ? "visible"
+                  : "hidden"
+              }`}
+            />
 
-                    <span className="camera-scan-dot"></span>
 
-                    {modelLoading
-                      ? "LOADING AI..."
-                      : "AI DETECTING"}
+            {/* =================================
+                CAMERA PLACEHOLDER
+                ================================= */}
 
-                  </div>
-
-                </div>
-
-              </>
-
-            ) : (
+            {!cameraActive && (
 
               <div className="camera-placeholder">
 
@@ -823,10 +1112,9 @@ function CameraMonitoring() {
 
 
                 <button
+                  type="button"
                   className="start-camera-button"
-                  onClick={
-                    startCamera
-                  }
+                  onClick={startCamera}
                 >
 
                   <Camera size={17} />
@@ -840,7 +1128,32 @@ function CameraMonitoring() {
             )}
 
 
-            {/* SCANNING CORNERS */}
+            {/* =================================
+                ACTIVE OVERLAY
+                ================================= */}
+
+            {cameraActive && (
+
+              <div className="camera-active-overlay">
+
+                <div className="camera-scanning">
+
+                  <span className="camera-scan-dot"></span>
+
+                  {modelLoading
+                    ? "LOADING AI..."
+                    : "AI DETECTING"}
+
+                </div>
+
+              </div>
+
+            )}
+
+
+            {/* =================================
+                SCANNING CORNERS
+                ================================= */}
 
             <span className="scan-corner top-left"></span>
 
@@ -892,10 +1205,9 @@ function CameraMonitoring() {
               {cameraActive && (
 
                 <button
+                  type="button"
                   className="stop-camera-button"
-                  onClick={
-                    stopCamera
-                  }
+                  onClick={stopCamera}
                 >
 
                   Stop Camera
@@ -909,7 +1221,9 @@ function CameraMonitoring() {
           </div>
 
 
-          {/* ERROR */}
+          {/* =================================
+              ERROR
+          ================================== */}
 
           {cameraError && (
 
@@ -1241,6 +1555,5 @@ function CameraMonitoring() {
   );
 
 }
-
 
 export default CameraMonitoring;

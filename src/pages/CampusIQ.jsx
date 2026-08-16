@@ -1,26 +1,66 @@
+
 import { Send, Sparkles } from "lucide-react";
+import { useState } from "react";
+
 import "../styles/components/CampusIQ.css";
 
 function CampusIQ() {
+  const [message, setMessage] = useState("");
+
+  const quickActions = [
+    "Find a quiet place",
+    "Today's events",
+    "Next class",
+  ];
+
+  const handleQuickAction = (action) => {
+    setMessage(action);
+  };
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+
+    const trimmedMessage = message.trim();
+
+    if (!trimmedMessage) {
+      return;
+    }
+
+    // Temporary behavior.
+    // This will later connect to the CampusIQ AI/API.
+    console.log("CampusIQ query:", trimmedMessage);
+
+    setMessage("");
+  };
+
   return (
     <div className="campus-iq">
 
-      {/* Header */}
+      {/* =========================================
+          HEADER
+      ========================================= */}
+
       <div className="campus-iq-header">
 
         <div className="campus-iq-icon">
           <Sparkles size={20} />
         </div>
 
-        <div>
+        <div className="campus-iq-header-text">
           <h2>CampusIQ</h2>
-          <p>Your intelligent campus assistant</p>
+
+          <p>
+            Your intelligent campus assistant
+          </p>
         </div>
 
       </div>
 
 
-      {/* Assistant Message */}
+      {/* =========================================
+          ASSISTANT MESSAGE
+      ========================================= */}
+
       <div className="campus-iq-message">
 
         <p>
@@ -30,37 +70,51 @@ function CampusIQ() {
       </div>
 
 
-      {/* Quick Actions */}
+      {/* =========================================
+          QUICK ACTIONS
+      ========================================= */}
+
       <div className="campus-iq-actions">
 
-        <button>
-          Find a quiet place
-        </button>
-
-        <button>
-          Today's events
-        </button>
-
-        <button>
-          Next class
-        </button>
+        {quickActions.map((action) => (
+          <button
+            key={action}
+            type="button"
+            onClick={() => handleQuickAction(action)}
+          >
+            {action}
+          </button>
+        ))}
 
       </div>
 
 
-      {/* Chat Input */}
-      <div className="campus-iq-input">
+      {/* =========================================
+          CHAT INPUT
+      ========================================= */}
+
+      <form
+        className="campus-iq-input"
+        onSubmit={handleSubmit}
+      >
 
         <input
           type="text"
+          value={message}
+          onChange={(event) => setMessage(event.target.value)}
           placeholder="Ask CampusIQ..."
+          aria-label="Ask CampusIQ"
         />
 
-        <button>
+        <button
+          type="submit"
+          aria-label="Send message"
+          disabled={!message.trim()}
+        >
           <Send size={17} />
         </button>
 
-      </div>
+      </form>
 
     </div>
   );
