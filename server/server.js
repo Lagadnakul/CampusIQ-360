@@ -5,11 +5,19 @@ const connectDB = require("./src/config/database");
 
 const PORT = process.env.PORT || 5000;
 
-// Connect to Database first, then start server
-connectDB().then(() => {
-  app.listen(PORT, () => {
-    console.log(`CampusIQ 360 server running on http://localhost:${PORT}`);
-  });
-}).catch((err) => {
-  console.error("Database connection failed:", err);
-});
+const startServer = async () => {
+  try {
+    await connectDB();
+
+    app.listen(PORT, "0.0.0.0", () => {
+      console.log(
+        `CampusIQ 360 server running on http://localhost:${PORT}`
+      );
+    });
+  } catch (error) {
+    console.error("Failed to start server:", error.message);
+    process.exit(1);
+  }
+};
+
+startServer();
