@@ -2,9 +2,10 @@ const Student = require("../models/Student");
 
 const createStudent = async(req,res) => {
     try {
-        const {name, email, cource, semester} = req.body;
+        const {name, email, course, semester} = req.body;
+        console.log(req.body);
 
-        if(!name || !email || !cource || !semester){
+        if(!name || !email || !course || !semester){
             return res.status(400).json({
                 success: false,
                 message: "All fields are required",
@@ -14,7 +15,7 @@ const createStudent = async(req,res) => {
         const student = await Student.create({
             name,
             email,
-            cource,
+            course,
             semester,
         });
 
