@@ -6,6 +6,11 @@ const studentRoutes = require("./routes/studentRoutes");
 
 const userRoutes = require("./routes/userRoutes");
 
+const errorMiddleware = require("./middleware/errorMiddleware");
+const courseRoutes = require("./routes/courseRoutes");
+const dashboardRoutes = require("./routes/dashboardRoutes");
+const subjectRoutes = require("./routes/subjectRoutes");
+
 
 const app = express();
 
@@ -23,4 +28,8 @@ app.use("/api/auth", authRoutes);
 app.use("/api/students", studentRoutes);
 app.use("/api/users", userRoutes);
 
+app.use("/api/courses", courseRoutes);
+app.use("/api/dashboard", dashboardRoutes);
+app.use("/api/subjects", subjectRoutes);
+app.use(errorMiddleware);
 module.exports = app;
