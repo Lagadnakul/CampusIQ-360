@@ -1,0 +1,36 @@
+# Render blueprint — deploys the CampusIQ 360 API (server/) only.
+#
+# The React client is a static build and belongs on Vercel, not here.
+#
+# NOTE: Render only reads this file for services created via New → Blueprint.
+# A service created manually keeps its settings in the dashboard, where the
+# equivalent values are:
+#   Root Directory     server
+#   Build Command      npm install
+#   Start Command      npm start
+#   Health Check Path  /api/health
+
+services:
+  - type: web
+    name: campusiq-360-api
+    runtime: node
+    rootDir: server
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_VERSION
+        value: 20.18.0
+      - key: NODE_ENV
+        value: production
+      # Set these in the Render dashboard — never commit real values.
+      - key: MONGO_URI
+        sync: false
+      - key: JWT_SECRET
+        generateValue: true
+      - key: JWT_EXPIRE
+        value: 7d
+      # CORS: the deployed frontend origin.
+      - key: FRONTEND_URL
+        sync: false

@@ -22,7 +22,26 @@ const eventRoutes = require("./routes/eventRoutes");
 const app = express();
 app.use(helmet());
 
-app.use(cors());
+// CORS allowlist. Set FRONTEND_URL (and optionally CORS_EXTRA_ORIGINS, a
+// comma-separated list) in the environment to restrict which origins may call
+// this API. With neither set we fall back to allowing every origin, so local
+// development and the existing deployment keep working — but that is not a
+// safe production posture, hence the warning.
+const allowedOrigins = [
+  process.env.FRONTEND_URL,
+  ...(process.env.CORS_EXTRA_ORIGINS || "").split(","),
+]
+  .filter(Boolean)
+  .map((o) => o.trim().replace(/\/$/, ""));
+
+if (allowedOrigins.length > 0) {
+  app.use(cors({ origin: allowedOrigins, credentials: true }));
+} else {
+  console.warn(
+    "[cors] FRONTEND_URL is not set — allowing all origins. Set it in production."
+  );
+  app.use(cors());
+}
 app.use(express.json());
 
 const authLimiter = rateLimit({
