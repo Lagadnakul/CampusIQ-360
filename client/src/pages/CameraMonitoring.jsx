@@ -35,6 +35,7 @@ function CameraMonitoring() {
   const streamRef = useRef(null);
   const modelRef = useRef(null);
   const animationRef = useRef(null);
+  const detectionTimerRef = useRef(null);
   const fpsAnimationRef = useRef(null);
 
 
@@ -51,6 +52,7 @@ function CameraMonitoring() {
   // ==========================================
 
   const [modelLoading, setModelLoading] = useState(true);
+  const [modelError, setModelError] = useState("");
   const [peopleCount, setPeopleCount] = useState(0);
   const [confidence, setConfidence] = useState(0);
   const [framesAnalyzed, setFramesAnalyzed] = useState(0);
@@ -80,6 +82,7 @@ function CameraMonitoring() {
         modelRef.current = model;
 
         setModelLoading(false);
+        setModelError("");
 
         console.log(
           "COCO-SSD model loaded successfully."
@@ -94,6 +97,9 @@ function CameraMonitoring() {
 
         if (mounted) {
           setModelLoading(false);
+          setModelError(
+            "The AI model could not be loaded. Check your connection and reload the page."
+          );
         }
 
       }
@@ -369,6 +375,11 @@ function CameraMonitoring() {
 
       animationRef.current = null;
 
+    }
+
+    if (detectionTimerRef.current) {
+      clearTimeout(detectionTimerRef.current);
+      detectionTimerRef.current = null;
     }
 
 
@@ -688,10 +699,10 @@ function CameraMonitoring() {
 
     if (streamRef.current) {
 
-      animationRef.current =
-        requestAnimationFrame(
-          detectPeople
-        );
+      detectionTimerRef.current = setTimeout(
+        detectPeople,
+        120
+      );
 
     }
 
@@ -738,6 +749,11 @@ function CameraMonitoring() {
 
         }
 
+        if (detectionTimerRef.current) {
+          clearTimeout(detectionTimerRef.current);
+          detectionTimerRef.current = null;
+        }
+
       };
 
     }
@@ -755,6 +771,11 @@ function CameraMonitoring() {
 
         animationRef.current = null;
 
+      }
+
+      if (detectionTimerRef.current) {
+        clearTimeout(detectionTimerRef.current);
+        detectionTimerRef.current = null;
       }
 
     };
@@ -882,6 +903,11 @@ function CameraMonitoring() {
           fpsAnimationRef.current
         );
 
+      }
+
+      if (detectionTimerRef.current) {
+        clearTimeout(detectionTimerRef.current);
+        detectionTimerRef.current = null;
       }
 
 
@@ -1148,6 +1174,12 @@ function CameraMonitoring() {
 
               </div>
 
+            )}
+
+            {modelError && (
+              <div className="camera-error camera-model-error">
+                {modelError}
+              </div>
             )}
 
 

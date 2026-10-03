@@ -1,9 +1,16 @@
+import { useLocation } from "react-router-dom";
+
 import Sidebar from "../components/Sidebar";
 import Topbar from "../components/Topbar";
 
 import "../styles/layout/DashboardLayout.css";
 
 function DashboardLayout({ children }) {
+  const location = useLocation();
+  const isLightPage = ["/events", "/placements"].includes(
+    location.pathname
+  );
+
   return (
     <div className="app-layout">
 
@@ -13,7 +20,11 @@ function DashboardLayout({ children }) {
 
         <Topbar />
 
-        <main className="page-content">
+        <main
+          className={`page-content ${
+            isLightPage ? "light-page-content" : ""
+          }`}
+        >
           {children}
         </main>
 

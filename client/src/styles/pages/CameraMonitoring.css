@@ -800,6 +800,10 @@
   pointer-events: none;
 }
 
+.camera-model-error {
+  margin-top: 14px;
+}
+
 
 /* =========================================
    AI STATUS OVERLAY

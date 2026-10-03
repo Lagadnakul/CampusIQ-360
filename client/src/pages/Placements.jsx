@@ -9,7 +9,6 @@ import {
   Sparkles,
   Target,
   TrendingUp,
-  Users,
 } from "lucide-react";
 
 import "../styles/pages/Placements.css";
